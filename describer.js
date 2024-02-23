@@ -1,8 +1,8 @@
 const exec = require('child_process').exec;
-const openai = require('openai');
+const OpenAI = require('openai');
 
 const openai = new OpenAI({
-    apiKey: process.env['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'],
+    apiKey: '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',
   });
 
 function execProcess(command, cb){
