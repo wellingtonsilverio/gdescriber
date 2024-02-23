@@ -48,36 +48,37 @@ const generateDescriber = (openaiToken) => {
   });
 
   execProcess(generateGitCommand(), async function (err, response) {
-    if (!err) {
-      if (!response || response == "") {
-        console.error("You have no new commits");
-        return;
-      }
+    if (err) {
+      console.error("Origin parameter is not correct or you do not have git configured and in another branch other than Origin (Default Origin branch: main)");
+      return;
+    }
 
-      const messages = [
-        { role: 'system', content: "I have some git commit titles from my work that I'm doing and I would like to create a description for the github pull request explaining what I did to the reviewer, please don't use commit names" },
-        { role: 'system', content: "Please, add Changes Made, Details and message thanking the reviewer" },
-      ];
+    if (!response || response == "") {
+      console.error("You have no new commits");
+      return;
+    }
 
-      if (options.prompt) messages.push({ role: 'system', content: options.prompt });
+    const messages = [
+      { role: 'system', content: "I have some git commit titles from my work that I'm doing and I would like to create a description for the github pull request explaining what I did to the reviewer, please don't use commit names" },
+      { role: 'system', content: "Please, add Changes Made, Details and message thanking the reviewer" },
+    ];
 
-      messages.push({ role: 'system', content: "The title is divided into: datetime;author name;title of changes" });
-      messages.push({ role: 'user', content: `Titles:
+    if (options.prompt) messages.push({ role: 'system', content: options.prompt });
+
+    messages.push({ role: 'system', content: "The title are in reverse order and is divided into: datetime;author name;sumamary of changes" });
+    messages.push({ role: 'user', content: `Titles:
 ${response}` });
 
-      try {
-        const chatCompletion = await openai.chat.completions.create({
-          messages: messages,
-          model: 'gpt-3.5-turbo',
-          temperature: 0.01,
-        });
+    try {
+      const chatCompletion = await openai.chat.completions.create({
+        messages: messages,
+        model: 'gpt-3.5-turbo',
+        temperature: 0.01,
+      });
 
-        console.log(chatCompletion?.choices[0]?.message?.content);
-      } catch (error) {
-        console.log(error);
-      }
-    } else {
-      console.log(err);
+      console.log(chatCompletion?.choices[0]?.message?.content);
+    } catch (error) {
+      console.log(error);
     }
   });
 }
