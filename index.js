@@ -16,20 +16,21 @@ function execProcess(command, cb) {
   });
 }
 
-fs.readFile('./package.json', 'utf8', (err, package) => {
+fs.readFile('./package.json', 'utf8', (err, data) => {
   if (err) {
     console.error("Don't exists package.json file");
     return;
   }
+  const package = JSON.parse(data);
+  const openaiToken = package?.gdescriber?.openai_token;
 
-  if (!package?.describer?.openai_token) {
+  if (!openaiToken) {
     console.error("Configure you token in package.json");
-    console.log(package);
     return;
   }
 
   const openai = new OpenAI({
-    apiKey: package?.describer?.openai_token,
+    apiKey: openaiToken,
   });
 
   execProcess("git --no-pager log HEAD...main --format='%ai;%an;%B'", async function (err, response) {
