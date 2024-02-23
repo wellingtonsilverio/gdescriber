@@ -1,4 +1,4 @@
-#!/path/to/node
+#!/usr/bin/env node
 
 const exec = require('child_process').exec;
 const OpenAI = require('openai');

@@ -3,7 +3,9 @@
   "version": "1.5.0",
   "description": "",
   "main": "index.js",
-  "bin": "index.js",
+  "bin": {
+    "npx-command": "index.js"
+  },
   "scripts": {
     "start": "node index.js",
     "test": "jest"
