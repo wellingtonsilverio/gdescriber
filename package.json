@@ -2,9 +2,10 @@
   "name": "gdescriber",
   "version": "1.0.0",
   "description": "",
-  "main": "describer.js",
+  "main": "index.js",
+  "bin": "index.js",
   "scripts": {
-    "start": "node describer.js",
+    "start": "node index.js",
     "test": "jest"
   },
   "author": "",
