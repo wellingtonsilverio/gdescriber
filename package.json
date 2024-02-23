@@ -1,0 +1,14 @@
+{
+  "name": "describer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "describer.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "openai": "^4.28.0"
+  }
+}
