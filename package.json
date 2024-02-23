@@ -4,10 +4,14 @@
   "description": "",
   "main": "describer.js",
   "scripts": {
+    "start": "node describer.js",
     "test": "jest"
   },
   "author": "",
   "license": "ISC",
+  "describer": {
+    "openai_token": "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"
+  },
   "dependencies": {
     "openai": "^4.28.0"
   }
