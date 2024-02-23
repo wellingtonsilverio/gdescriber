@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "command-line-args": "^5.2.1",
     "openai": "^4.28.0"
   }
 }

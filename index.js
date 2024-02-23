@@ -3,6 +3,13 @@
 const fs = require('node:fs');
 const exec = require('child_process').exec;
 const OpenAI = require('openai');
+const commandLineArgs = require('command-line-args')
+
+const optionDefinitions = [
+  { name: 'origin', alias: 'o', type: String },
+  { name: 'prompt', alias: 'p', type: String }
+];
+const options = commandLineArgs(optionDefinitions);
 
 function execProcess(command, cb) {
   var child = exec(command, function (err, stdout, stderr) {
@@ -16,6 +23,20 @@ function execProcess(command, cb) {
   });
 }
 
+function generateGitCommand() {
+  const command = ["git --no-pager log"];
+
+  if (options.origin) {
+    command.push(`HEAD...${options.origin}`);
+  } else {
+    command.push(`HEAD...main`);
+  }
+
+  command.push("--format='%ai;%an;%B'");
+
+  return command.join(' ');
+}
+
 const generateDescriber = (openaiToken) => {
   if (!openaiToken) {
     console.error("Configure you token in package.json");
@@ -26,21 +47,27 @@ const generateDescriber = (openaiToken) => {
     apiKey: openaiToken,
   });
 
-  execProcess("git --no-pager log HEAD...main --format='%ai;%an;%B'", async function (err, response) {
+  execProcess(generateGitCommand(), async function (err, response) {
     if (!err) {
       if (!response || response == "") {
         console.error("You have no new commits");
         return;
       }
-      
+
+      const messages = [
+        { role: 'system', content: "I have some git commit titles from my work that I'm doing and I would like to create a description for the github pull request explaining what I did to the reviewer, please don't use commit names" },
+        { role: 'system', content: "Please, add Changes Made, Details and message thanking the reviewer" },
+      ];
+
+      if (options.prompt) messages.push({ role: 'system', content: options.prompt });
+
+      messages.push({ role: 'system', content: "The title is divided into: datetime;author name;title of changes" });
+      messages.push({ role: 'user', content: `Titles:
+${response}` });
+
       try {
         const chatCompletion = await openai.chat.completions.create({
-          messages: [
-            { role: 'system', content: "I have some git commit titles from my work with the node program that I'm doing and I would like to create a description for the github pull request explaining what I did to the reviewer, please don't use commit names" },
-            { role: 'system', content: "Please, add Changes Made, Details and message thanking the reviewer" },
-            { role: 'system', content: "The title is divided into: datetime;author name;title of changes" },
-            { role: 'user', content: response },
-          ],
+          messages: messages,
           model: 'gpt-3.5-turbo',
           temperature: 0.01,
         });
