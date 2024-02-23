@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
 
+jobs:
   build:
     needs: version-update
     runs-on: ubuntu-latest
