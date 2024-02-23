@@ -16,8 +16,8 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "GitHub Actions"
     
-      # Bump package version
-      # Use tag latest
+      - uses: actions/checkout@v3
+      
       - name: Bump release version
         run: |
           echo "NEW_VERSION=$(npm --no-git-tag-version version $RELEASE_TYPE)" >> $GITHUB_ENV
@@ -32,6 +32,7 @@ jobs:
           git tag ${{ env.NEW_VERSION }}
 
   build:
+    needs: version-update
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
