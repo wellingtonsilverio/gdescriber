@@ -1,4 +1,9 @@
 const exec = require('child_process').exec;
+const openai = require('openai');
+
+const openai = new OpenAI({
+    apiKey: process.env['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'],
+  });
 
 function execProcess(command, cb){
     var child = exec(command, function(err, stdout, stderr){
@@ -12,10 +17,15 @@ function execProcess(command, cb){
     });
 }
 
-execProcess("git --no-pager log HEAD...main --format='%ai;%an;%B'", function(err, response){
+execProcess("git --no-pager log HEAD...main --format='%ai;%an;%B'", async function(err, response){
     if(!err){
-        console.log(response);
-        console.log("---");
+        console.log("execProcess",response);
+        const chatCompletion = await openai.chat.completions.create({
+            messages: [{ role: 'user', content: 'Say this is a test' }],
+            model: 'gpt-3.5-turbo',
+          });
+        console.log("chatCompletion",chatCompletion);
+
     }else {
         console.log(err);
     }
