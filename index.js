@@ -1,5 +1,3 @@
-#!/usr/bin/node
-
 const exec = require('child_process').exec;
 const OpenAI = require('openai');
 const package = require('./package.json');
