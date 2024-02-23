@@ -24,6 +24,7 @@ fs.readFile('./package.json', 'utf8', (err, package) => {
 
   if (!package?.describer?.openai_token) {
     console.error("Configure you token in package.json");
+    console.log(package);
     return;
   }
 
