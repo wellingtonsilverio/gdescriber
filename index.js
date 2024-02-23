@@ -16,14 +16,7 @@ function execProcess(command, cb) {
   });
 }
 
-fs.readFile('./package.json', 'utf8', (err, data) => {
-  if (err) {
-    console.error("Don't exists package.json file");
-    return;
-  }
-  const package = JSON.parse(data);
-  const openaiToken = package?.gdescriber?.openai_token;
-
+const generateDescriber = (openaiToken) => {
   if (!openaiToken) {
     console.error("Configure you token in package.json");
     return;
@@ -35,6 +28,11 @@ fs.readFile('./package.json', 'utf8', (err, data) => {
 
   execProcess("git --no-pager log HEAD...main --format='%ai;%an;%B'", async function (err, response) {
     if (!err) {
+      if (!response || response == "") {
+        console.error("You have no new commits");
+        return;
+      }
+      
       try {
         const chatCompletion = await openai.chat.completions.create({
           messages: [
@@ -55,4 +53,20 @@ fs.readFile('./package.json', 'utf8', (err, data) => {
       console.log(err);
     }
   });
-});
+}
+
+const openaiToken = process.env.openai_token || process.env.OPENAI_TOKEN;
+
+if (openaiToken) {
+  generateDescriber(openaiToken)
+} else {
+  fs.readFile('./package.json', 'utf8', (err, data) => {
+    if (err) {
+      console.error("Don't exists package.json file");
+      return;
+    }
+    const package = JSON.parse(data);
+  
+    generateDescriber(package?.gdescriber?.openai_token)
+  });
+}
