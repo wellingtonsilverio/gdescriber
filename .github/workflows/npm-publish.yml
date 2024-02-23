@@ -2,8 +2,7 @@ name: Node.js Package
 
 on:
   push:
-     tags:
-      - '*'
+    branches: [main]
 
   build:
     needs: version-update
