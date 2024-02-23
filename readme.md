@@ -1,7 +1,6 @@
 # DESCRIBER: Description by AI
 Generate a description of the tasks done to put in the pull request from your commits
-![](https://github.com/wellingtonsilverio/gdescriber/.readme-assets/example.gif)
-
+![](https://raw.githubusercontent.com/wellingtonsilverio/gdescriber/main/.readme-assets/example.gif)
 
 ## Configure:
 Add the environment variable `OPENAI_TOKEN` with your openai api key or add it to package.json
