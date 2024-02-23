@@ -59,13 +59,13 @@ const generateDescriber = (openaiToken) => {
     }
 
     const messages = [
-      { role: 'system', content: "I have some git commit titles from my work that I'm doing and I would like to create a description for the github pull request explaining what I did to the reviewer, please don't use commit names" },
+      { role: 'system', content: "I have some git commit titles from my work that I'm doing and I would like to create a description for the github pull request explaining what I did to the reviewer in chronological order and in Markdown format, please don't use commit names" },
       { role: 'system', content: "Please, add Changes Made, Details and message thanking the reviewer" },
     ];
 
     if (options.prompt) messages.push({ role: 'system', content: options.prompt });
 
-    messages.push({ role: 'system', content: "The title are in reverse order and is divided into: datetime;author name;sumamary of changes" });
+    messages.push({ role: 'system', content: "The title is divided into: datetime;author name;sumamary of changes" });
     messages.push({ role: 'user', content: `Titles:
 ${response}` });
 
