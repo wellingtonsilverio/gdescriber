@@ -26,7 +26,7 @@ jobs:
           RELEASE_TYPE: minor
     
       - name: Commit package.json changes and create tag
-       env:
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git add "package.json"
